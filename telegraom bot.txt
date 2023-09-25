@@ -1,0 +1,42 @@
+```python
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+
+# Функция, которая будет вызываться при отправке команды /start
+def start(update: Update, context: CallbackContext) -> None:
+"""Отправляет приветственное сообщение в ответ на команду /start"""
+update.message.reply_text("Привет! Я ECHO бот, готов повторять за тобой.")
+
+
+# Функция, которая будет вызываться при отправке текстового сообщения
+def echo(update: Update, context: CallbackContext) -> None:
+"""Повторяет сообщение обратно пользователю"""
+update.message.reply_text(update.message.text)
+
+
+def main() -> None:
+"""Основная функция для запуска бота"""
+# Создаем экземпляр Updater и передаем токен вашего бота
+# (полученный от @BotFather)
+updater = Updater("YOUR_BOT_TOKEN")
+
+# Получаем диспетчер для регистрации обработчиков
+dispatcher = updater.dispatcher
+
+# Регистрируем обработчик команды /start
+dispatcher.add_handler(CommandHandler("start", start))
+
+# Регистрируем обработчик текстовых сообщений
+dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+# Запускаем бота
+updater.start_polling()
+
+# Принудительно останавливаем бота при нажатии Ctrl+C
+updater.idle()
+
+
+if __name__ == '__main__':
+main()
+```
